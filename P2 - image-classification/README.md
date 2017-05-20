@@ -1,4 +1,14 @@
+## Running on your local machine:
+
+1. go to https://www.cs.toronto.edu/~kriz/cifar.html download CIFAR-10 python.
+
+2. Unzip the dataset and put it in your working directory.
+
+3. cifar10_dataset_folder_path = '$YOUR_PATH/cifar-10-batches-py' in the first cell of dlnd_image_classification.ipynb
+
 ## Running the Udacity Deep Learning Foundations image classification project on floydhub.com
+
+0. Uncomment ClassDLProgress in the 
 
 1. Create an account on [floydhub.com](https://www.floydhub.com) (don't forget to confirm your email). You will automatically receive 100 free GPU hours. 
 
