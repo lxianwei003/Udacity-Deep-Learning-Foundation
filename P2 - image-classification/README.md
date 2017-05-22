@@ -1,3 +1,5 @@
+
+
 ## Running on your local machine:
 
 1. go to https://www.cs.toronto.edu/~kriz/cifar.html download CIFAR-10 python.
@@ -61,5 +63,3 @@ Alternatively, If you already stoped the experiment, you can still download the 
 (where ID is the "RUN ID" displayed in the terminal when you run the project; if you lost it you can also find it in the ["Experiments" section on floyd.com](https://www.floydhub.com/experiments))
     
 Just run the command above, download `dlnd_image_classification.ipynb` and replace your local version with the newly downloaded one.
----
-![screenshot-review.udacity.com-2017-05-21-20-03-06.png](http://upload-images.jianshu.io/upload_images/1873837-9d196943946605fd.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
