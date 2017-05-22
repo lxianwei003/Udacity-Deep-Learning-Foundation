@@ -1,4 +1,6 @@
+## Read grader's comment:
 
+* Go to https://review.udacity.com/#!/reviews/502710 or open up "grader comment.png" in this directory.
 
 ## Running on your local machine:
 
