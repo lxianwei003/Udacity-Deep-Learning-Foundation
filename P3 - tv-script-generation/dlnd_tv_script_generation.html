@@ -12732,7 +12732,7 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
@@ -12771,7 +12771,7 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[19]:</div>
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">get_tensors</span><span class="p">(</span><span class="n">loaded_graph</span><span class="p">):</span>
@@ -12829,7 +12829,7 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">pick_word</span><span class="p">(</span><span class="n">probabilities</span><span class="p">,</span> <span class="n">int_to_vocab</span><span class="p">):</span>
@@ -12844,7 +12844,7 @@ Model Trained and Saved
     <span class="n">words</span> <span class="o">=</span> <span class="p">[]</span>
     
     <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">probabilities</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;</span> <span class="mf">0.1</span><span class="p">:</span>
             <span class="n">words</span> <span class="o">+=</span> <span class="p">[</span><span class="n">int_to_vocab</span><span class="p">[</span><span class="n">idx</span><span class="p">]]</span>
 
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">words</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -12887,10 +12887,104 @@ Model Trained and Saved
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">gen_length</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="c1"># homer_simpson, moe_szyslak, or Barney_Gumble</span>
+<span class="n">prime_word</span> <span class="o">=</span> <span class="s1">&#39;moe_szyslak&#39;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">DON&#39;T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="n">loaded_graph</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">loaded_graph</span><span class="p">)</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="c1"># Load saved model</span>
+    <span class="n">loader</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">import_meta_graph</span><span class="p">(</span><span class="n">load_dir</span> <span class="o">+</span> <span class="s1">&#39;.meta&#39;</span><span class="p">)</span>
+    <span class="n">loader</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">load_dir</span><span class="p">)</span>
+
+    <span class="c1"># Get Tensors from loaded model</span>
+    <span class="n">input_text</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">,</span> <span class="n">final_state</span><span class="p">,</span> <span class="n">probs</span> <span class="o">=</span> <span class="n">get_tensors</span><span class="p">(</span><span class="n">loaded_graph</span><span class="p">)</span>
+
+    <span class="c1"># Sentences generation setup</span>
+    <span class="n">gen_sentences</span> <span class="o">=</span> <span class="p">[</span><span class="n">prime_word</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span><span class="p">]</span>
+    <span class="n">prev_state</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">initial_state</span><span class="p">,</span> <span class="p">{</span><span class="n">input_text</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">]])})</span>
+
+    <span class="c1"># Generate sentences</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gen_length</span><span class="p">):</span>
+        <span class="c1"># Dynamic Input</span>
+        <span class="n">dyn_input</span> <span class="o">=</span> <span class="p">[[</span><span class="n">vocab_to_int</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">gen_sentences</span><span class="p">[</span><span class="o">-</span><span class="n">seq_length</span><span class="p">:]]]</span>
+        <span class="n">dyn_seq_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dyn_input</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+        <span class="c1"># Get Prediction</span>
+        <span class="n">probabilities</span><span class="p">,</span> <span class="n">prev_state</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">probs</span><span class="p">,</span> <span class="n">final_state</span><span class="p">],</span>
+            <span class="p">{</span><span class="n">input_text</span><span class="p">:</span> <span class="n">dyn_input</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">:</span> <span class="n">prev_state</span><span class="p">})</span>
+        <span class="c1">#print(sum(probabilities[dyn_seq_length-1]&gt;0.05))</span>
+        <span class="n">pred_word</span> <span class="o">=</span> <span class="n">pick_word</span><span class="p">(</span><span class="n">probabilities</span><span class="p">[</span><span class="n">dyn_seq_length</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">int_to_vocab</span><span class="p">)</span>
+
+        <span class="n">gen_sentences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pred_word</span><span class="p">)</span>
+    
+    <span class="c1"># Remove tokens</span>
+    <span class="n">tv_script</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen_sentences</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">token_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">ending</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;(&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">tv_script</span> <span class="o">=</span> <span class="n">tv_script</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">token</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">key</span><span class="p">)</span>
+    <span class="n">tv_script</span> <span class="o">=</span> <span class="n">tv_script</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> &#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">tv_script</span> <span class="o">=</span> <span class="n">tv_script</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;( &#39;</span><span class="p">,</span> <span class="s1">&#39;(&#39;</span><span class="p">)</span>
+        
+    <span class="nb">print</span><span class="p">(</span><span class="n">tv_script</span><span class="p">)</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area"><div class="prompt"></div>
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>INFO:tensorflow:Restoring parameters from ./save
+moe_szyslak: oh god, oh god!
+
+
+homer_simpson: ahhh, that is so much better than hospital beer.
+lenny_leonard: homer, where you been the last few weeks?
+homer_simpson:(bitterly) playing nursemaid to chief wiggum.
+carl_carlson: people who get shot in the game. i promise.
+moe_szyslak:(uneasy) oh, i can&#39;t wait till you guys get to uh...
+thought_bubble_lenny: yep, that&#39;s what we&#39;d do, marge.(sings) my taste for romance is kinda perverse / i can only give up on yourself and take your sacajawea dollars with the uh, and he pays my with when they won&#39;t let me in here, i&#39;m gonna have to quit drinking.
+homer_simpson: shut up, liver.
+homer_simpson:(puzzled) ooh, my liver hurts.
+
+
+moe_szyslak: sure, homer, i can loan you all the money you blew, aren&#39;tcha?
+homer_simpson: what was it? 50-60 thousand dollars?... moe? look, maybe it would help if you went over all the mistakes
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Let's-try-it-for-a-thousand-words!-It-looks-much-better!">Let's try it for a thousand words! It looks much better!<a class="anchor-link" href="#Let's-try-it-for-a-thousand-words!-It-looks-much-better!">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gen_length</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="c1"># homer_simpson, moe_szyslak, or Barney_Gumble</span>
 <span class="n">prime_word</span> <span class="o">=</span> <span class="s1">&#39;moe_szyslak&#39;</span>
 
@@ -12953,163 +13047,77 @@ moe_szyslak: oh god, oh god!
 homer_simpson: ahhh, that is so much better than hospital beer.
 lenny_leonard: homer, where you been the last few weeks?
 homer_simpson:(bitterly) playing nursemaid to chief wiggum.
-carl_carlson: people who get shot from homer.
-homer_simpson: ah, isn&#39;t that illegal.
-homer_simpson:(moved) ned, i have a confession to make: i may not have come here solely with the noble intention?
-carl_carlson: hey, homer. i never seen you so depressed. as your life partner, i&#39;m very worried.
-homer_simpson: save your tears, moe. save &#39;em in a shot glass for someone who still has a shred of hope he is a boozer.
-moe_szyslak:(quietly) no, you get your sign.
+carl_carlson: people who get shot from there.
+moe_szyslak: so the name&#34; lisa simpson&#34; is available, huh?(considering) lotta goodwill attached to that name...(nods) i&#39;m gonna be so cruel! especially &#39;em.
+dr. _julius_hibbert: all right.
+chief_wiggum: now, let me conclude by thanking moe the bartender for hosting this meeting while city hall is fumigated for bedbugs.
+ned_flanders:(puzzled) bedbugs? just why is there a bed in city hall.
+moe_szyslak: yeah, come on, there&#39;s sexy bald like... uh... well, i&#39;ve always wondered what it would feel like to wear something that&#39;s not as him placing a cuckold&#39;s horns upon my brow. and that will make me want to jump off a--(gasps)
+homer_simpson: for the love of god, i don&#39;t know / what kind of adventure you know&#34;
+homer_simpson:(scared) look mister... who the hell&#39;s been putting beers on his tab?
+barney_gumble:(tentative annoyed grunt)(laughs) yeah.
+homer_simpson: fine, the time has come for every tooth?
+carl_carlson:(amazed) did you ever see that&#34; blue man group?&#34;
+marge_simpson: oh, he&#39;s on the blue man group!(sotto) uh-oh.&#34;
+homer_simpson: barney. i&#39;m honored to drink to apu and, uh... apulina.
+homer_simpson: you know, marge and i have an anniversary coming up.
+barney_gumble: i like a mess here. i feel pretty good.
 
 
-moe_szyslak:(shocked) are you sure? cuz once i open this place this crowded is to me, you.
-lenny_leonard: hey, moe, can i look too?
-moe_szyslak: sure, but it&#39;ll cost ya.
-homer_simpson:(excited) my wallet&#39;s
-</pre>
-</div>
-</div>
-
-</div>
-</div>
-
-</div>
-<div class="cell border-box-sizing text_cell rendered">
-<div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Let's-try-it-for-a-thousand-words!-It-looks-much-better!">Let's try it for a thousand words! It looks much better!<a class="anchor-link" href="#Let's-try-it-for-a-thousand-words!-It-looks-much-better!">&#182;</a></h1>
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-<div class="input">
-<div class="prompt input_prompt">In&nbsp;[29]:</div>
-<div class="inner_cell">
-    <div class="input_area">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">gen_length</span> <span class="o">=</span> <span class="mi">1000</span>
-<span class="c1"># homer_simpson, moe_szyslak, or Barney_Gumble</span>
-<span class="n">prime_word</span> <span class="o">=</span> <span class="s1">&#39;moe_szyslak&#39;</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">DON&#39;T MODIFY ANYTHING IN THIS CELL THAT IS BELOW THIS LINE</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="n">loaded_graph</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
-<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">(</span><span class="n">graph</span><span class="o">=</span><span class="n">loaded_graph</span><span class="p">)</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
-    <span class="c1"># Load saved model</span>
-    <span class="n">loader</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">import_meta_graph</span><span class="p">(</span><span class="n">load_dir</span> <span class="o">+</span> <span class="s1">&#39;.meta&#39;</span><span class="p">)</span>
-    <span class="n">loader</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">load_dir</span><span class="p">)</span>
-
-    <span class="c1"># Get Tensors from loaded model</span>
-    <span class="n">input_text</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">,</span> <span class="n">final_state</span><span class="p">,</span> <span class="n">probs</span> <span class="o">=</span> <span class="n">get_tensors</span><span class="p">(</span><span class="n">loaded_graph</span><span class="p">)</span>
-
-    <span class="c1"># Sentences generation setup</span>
-    <span class="n">gen_sentences</span> <span class="o">=</span> <span class="p">[</span><span class="n">prime_word</span> <span class="o">+</span> <span class="s1">&#39;:&#39;</span><span class="p">]</span>
-    <span class="n">prev_state</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">initial_state</span><span class="p">,</span> <span class="p">{</span><span class="n">input_text</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">]])})</span>
-
-    <span class="c1"># Generate sentences</span>
-    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">gen_length</span><span class="p">):</span>
-        <span class="c1"># Dynamic Input</span>
-        <span class="n">dyn_input</span> <span class="o">=</span> <span class="p">[[</span><span class="n">vocab_to_int</span><span class="p">[</span><span class="n">word</span><span class="p">]</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">gen_sentences</span><span class="p">[</span><span class="o">-</span><span class="n">seq_length</span><span class="p">:]]]</span>
-        <span class="n">dyn_seq_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">dyn_input</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-
-        <span class="c1"># Get Prediction</span>
-        <span class="n">probabilities</span><span class="p">,</span> <span class="n">prev_state</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
-            <span class="p">[</span><span class="n">probs</span><span class="p">,</span> <span class="n">final_state</span><span class="p">],</span>
-            <span class="p">{</span><span class="n">input_text</span><span class="p">:</span> <span class="n">dyn_input</span><span class="p">,</span> <span class="n">initial_state</span><span class="p">:</span> <span class="n">prev_state</span><span class="p">})</span>
-        
-        <span class="n">pred_word</span> <span class="o">=</span> <span class="n">pick_word</span><span class="p">(</span><span class="n">probabilities</span><span class="p">[</span><span class="n">dyn_seq_length</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">int_to_vocab</span><span class="p">)</span>
-
-        <span class="n">gen_sentences</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pred_word</span><span class="p">)</span>
-    
-    <span class="c1"># Remove tokens</span>
-    <span class="n">tv_script</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">gen_sentences</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">token_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">ending</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span> <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;(&#39;</span><span class="p">,</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">]</span> <span class="k">else</span> <span class="s1">&#39;&#39;</span>
-        <span class="n">tv_script</span> <span class="o">=</span> <span class="n">tv_script</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">token</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">key</span><span class="p">)</span>
-    <span class="n">tv_script</span> <span class="o">=</span> <span class="n">tv_script</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> &#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-    <span class="n">tv_script</span> <span class="o">=</span> <span class="n">tv_script</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;( &#39;</span><span class="p">,</span> <span class="s1">&#39;(&#39;</span><span class="p">)</span>
-        
-    <span class="nb">print</span><span class="p">(</span><span class="n">tv_script</span><span class="p">)</span>
-</pre></div>
-
-</div>
-</div>
-</div>
-
-<div class="output_wrapper">
-<div class="output">
+moe_szyslak: hey, hey, no fightin&#39; in my bar.
 
 
-<div class="output_area"><div class="prompt"></div>
-<div class="output_subarea output_stream output_stdout output_text">
-<pre>INFO:tensorflow:Restoring parameters from ./save
-moe_szyslak: okay, but the last guy who charged a drink to burns turned up in a landfill.
-barney_gumble: yeah.(remembering fondly) but it was worth it!
-larry: what&#39;s everybody in this burg have against my dad? he&#39;s a pussycat. i tell marge a beer, please, uh...
-lenny_leonard: y&#39;know, i used to think you was a hero.
-homer_simpson: well, moe... what am i lookin&#39; at? i don&#39;t see nothin&#39;. i&#39;m gonna do something to change his life.
-lenny_leonard: we could write on his face when i hope he doesn&#39;t do it to ruin the space-time continuum.
-homer_simpson:(to thought bubble) who the hell are you?
-gentleman: what do you want to do?
-moe_szyslak: ah, i don&#39;t blame her. no. i don&#39;t bite. i can&#39;t work my answering machine either. now i need a new informant. say, lisa, people trust you. how&#39;d you like to be a snitch?
-homer_simpson: well, i... uh.........(loud) achem!
-homer_simpson: i can&#39;t believe it, moe.(shuts off hardhat)
-homer_simpson:(incredulous) moe? wrecking moe&#39;s bar?
-homer_simpson: wow, well i(nervous giggle) i almost fainted, but then i didn&#39;t.(looking around, upset) what are you doing?
-moe_szyslak:(nods) uh, the world&#39;s dumbest loser!
-moe_szyslak: oh, homer...
-homer_simpson:(singing) hello...
-chief_wiggum:(sings) full-bodied adeleine.
+moe_szyslak: hey! if you are very virile.
+barney_gumble: i got a date with my wife doesn&#39;t work a new guy.
+homer_simpson:(singing/pushing) how deep is your love... how deep is your love...
+lenny_leonard: are you sure it wasn&#39;t&#34; stayin&#39; alive?
+moe_szyslak: uh, i gotta check with lenny on that. uh, is that all right, everybody put!
+carl_carlson:(toasting) to marge. and all the blissful years i&#39;ve spent hiding from her in this bar.
+barflies: hear, hear!
+moe_szyslak: oh, there&#39;s sugar all over the bar now.
+lenny_leonard: that&#39;s not funny, but i got a date with my daughter!
+cletus_spuckler: yeah, padre. how did you come up?
+homer_simpson: i saw mr. two belts?
+homer_simpson: no, it&#39;s a felony to lie to the fbi.
+homer_simpson:(ashamed) yeah, i know, i got behind on my beer.
+moe_szyslak: yeah, i don&#39;t know. he&#39;s tough to catch. he keeps changing his name.
+homer_simpson:(reaches into his pocket)
+homer_simpson: shut up, or i&#39;ll ram a stool down your throat!(into mic) uh, is it?
+homer_simpson:(sweet) yeah.
+seymour_skinner: with me?
+homer_simpson:(sweet) yeah.
+homer_simpson: moe, what do you recommend for severe depression?
+homer_simpson: oh, i&#39;m afraid lenny&#39;s dead.
+doreen:(quiet shock)
+homer_simpson:(sings) he&#39;s the man that i hate best / i&#39;d like to see his house go up in flame!
+david_byrne: excuse me, i&#39;m looking for--
+moe_szyslak: wait, wait, wait, wait, homer&#39;s tryin&#39; to make a guess...
+moe_szyslak:(surprised/thrilled) it does?
+lenny_leonard:(sings) full-bodied adeleine.
+moe_szyslak: okay, i don&#39;t wanna start a tinklin&#39; contest here...
+marge_simpson: well, i&#39;m not the clone, you&#39;re the clone!
+moe_szyslak: oh please, not this again.
+homer_simpson:(shaking head) no, i won&#39;t accept that.
+moe_szyslak: no, it&#39;s true. i&#39;ve got their names written down right here, in what i call it.
+moe_szyslak: oh, it&#39;s ringing!
+lenny_leonard:(louder) omigod, omigod, omigod!
+lisa_simpson:(over the phone) hello?
+homer_simpson:(suddenly nervous) uh, hello. lisa, but i got a job here for your&#34; best friend,&#34; the bar rag.
+moe_szyslak: so, uh, you guys aren&#39;t from around here, are you?
+hans: ech, nein. we are from germany. he is from the east. i am from the west.
+fritz: i had a big company and he had a big company and he had a big deal of that.
+apu_nahasapeemapetilon:(to skinner) hear you, ralphie? the mayor knows daddy!
+moe_szyslak: ah, sorry homer, homer.
 
 
-moe_szyslak:(terrified noise) the one question remains gentlemen...
-chief_wiggum:(threatening) this is where the pretending ends.
-moe_szyslak: here ya go, homer. boy, y&#39;know, when you&#39;re just here alone, i can really smell ya.
-barney_gumble: no, it&#39;ll have to go drinking.
-homer_simpson: and you mean our sobo?
-moe_szyslak:(excited) oh, now... what have we here?
-chief_wiggum:(reading)&#34; dear homer, i admit it.
-homer_simpson:(re: tap) hmm. this isn&#39;t nearly as complicated as moe made it seem.
-homer_simpson: i&#39;m sorry about your face, moe.
-moe_szyslak:(pulls out shotgun) in this bar we say&#34; old kinderhook!&#34;
-lenny_leonard:(to lloyd) what&#39;s w. r. o. l.?
-moe_szyslak:(into phone) pleasure doing business with you,(coyly) h. s.
-homer_simpson:(singing) hello...
-chief_wiggum:(singing) hello...
-all:(quickly) sweet) did you say&#34; work for me?
-moe_szyslak: i mean, don&#39;t steal.
-lenny_leonard:(to self) someone&#39;s lookin&#39; at a snake in a new?
-moe_szyslak:(sobs) oh my god! it&#39;s worse than i thought.....
-hank_williams_jr. : canyoner-oooo.
-homer_simpson: really? i&#39;m getting late.
-moe_szyslak: well, anyone can get a laugh at the expense of an ugly dog. but crazy beards? that&#39;s where the big bucks are. i just caught two senators doin&#39; it in the alley. and me the guy a hundred and seats&#34;
-homer_simpson: well, i have my own dreams and i can&#39;t live them with you and that girl next door?
+moe_szyslak: all right, i need you to get the rats outta the jukebox, and clean the vomit out of the pool table pockets, and then you&#39;ve got the job.
+homer_simpson: you dirty teen.
+moe_szyslak:(being hit sounds) hey, homer stop, stop!
+barney_gumble:(sings) my-y-y-y-y-y adeleine.
 
 
-moe_szyslak:(shocked) are you sure? cuz once i open? you came to the brain-switching ceremony.
-carll&#34; : because i wanted to get back together with my wife, who was sleeping with carl at the time.
-lenny: turns out of five. but i don&#39;t have to-- i have to tidy up the place! just a big girl!
-homer_simpson:(excited) guys, this science exhibit that told me how stupid it is to play the lottery.
-moe_szyslak:(worried) so what i?
-moe_szyslak: uh, i gotta check.(to moe) hey, handsome, send the bill to my dad.
-moe_szyslak: so how much you lookalikes make myself in this new?
-moe_szyslak: oh...
-all:(murmur understanding assent) it&#39;s too late to save your life and...
-c. _montgomery_burns: good heavens, smithers.(sobs some more)
-moe_szyslak: um, you don&#39;t want to make this place less of you drunks and it&#39;s not even let me clap her erasers.
-sideshow_mel:(from tv) oh, i don&#39;t know. what would you treat a person who&#39;s generally dynamite but uh, in some way...
-moe_szyslak:(nervous chuckle then quickly) here you go, homer.(drinks happily)
-moe_szyslak: hey, i&#39;m so proud of you, sir. sector sieben-gruben-- i mean, it&#39;s not like drivin&#39; a money.
-
-
-moe_szyslak: i think you&#39;re taking unfair advantage of my generous offer.
-homer_simpson: shut up, liver.
-homer_simpson:(looking at watch) ah. finished with fifteen seconds to spare.
-little_man: uh-huh. my name is harv bannister. i work for&#34; tipsy mcstagger&#39;s good friends.
-moe_szyslak: hey, wait a minute.
-homer_simpson:(soothing) yes. you didn&#39;t say&#34;.
-moe_szyslak:(
+barney_gumble: wow! you mean you were one of the original little rascals?
+moe_szyslak: yeah
 </pre>
 </div>
 </div>
