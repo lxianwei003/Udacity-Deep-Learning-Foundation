@@ -1,3 +1,7 @@
+## Read grader's comment:
+
+* Go to https://review.udacity.com/#!/reviews/502710 or open up "grader comment.png" in this directory.
+
 ## Running on your local machine:
 
 1. go to https://www.cs.toronto.edu/~kriz/cifar.html download CIFAR-10 python.
