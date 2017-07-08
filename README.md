@@ -4,4 +4,4 @@ Artificial Intelligence is transforming our world in dramatic and beneficial way
 
 Go To: https://www.udacity.com/course/deep-learning-nanodegree-foundation--nd101
 
-![screenshot-classroom.udacity.com-2017-05-19-23-37-07.png](http://upload-images.jianshu.io/upload_images/1873837-a81be6976a0fa202.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![screenshot-www.udacity.com-2017-07-08-14-08-44.png](http://upload-images.jianshu.io/upload_images/1873837-4f5940ba7b7d8d58.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
